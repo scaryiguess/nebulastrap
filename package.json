@@ -1,0 +1,47 @@
+{
+  "name": "fflag-injector-v3",
+  "version": "3.1.0",
+  "description": "NebulaStrap - Roblox FFlag injector with a flat dark soft-glow dashboard",
+  "main": "src/main/index.js",
+  "author": "Roulette",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "preengine": "node scripts/sync-version.js",
+    "release": "node scripts/release.js",
+    "engine": "pyinstaller --noconfirm --onefile --console --name engine --distpath dist --workpath build/pyinstaller --specpath build/pyinstaller python/run.py",
+    "build": "electron-builder --win portable"
+  },
+  "build": {
+    "appId": "com.roulette.fflaginjector.v3",
+    "productName": "NebulaStrap",
+    "copyright": "FFlag Injector V3",
+    "asar": true,
+    "compression": "maximum",
+    "files": [
+      "src/**",
+      "build/icon.png",
+      "package.json",
+      "!build/icon.html"
+    ],
+    "extraResources": [
+      { "from": "dist/engine.exe", "to": "engine.exe" },
+      { "from": "scripts/memory-worker.ps1", "to": "memory-worker.ps1" },
+      { "from": "scripts/multi-instance.ps1", "to": "multi-instance.ps1" },
+      { "from": "scripts/apply-update.ps1", "to": "apply-update.ps1" }
+    ],
+    "win": {
+      "target": [{ "target": "portable", "arch": ["x64"] }],
+      "icon": "build/icon.ico",
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "portable": {
+      "artifactName": "NebulaStrap.exe"
+    },
+    "electronVersion": "28.3.3"
+  },
+  "devDependencies": {
+    "electron": "28.3.3",
+    "electron-builder": "^24.13.3"
+  }
+}

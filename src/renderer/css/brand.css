@@ -1,0 +1,118 @@
+#brand-art {
+  --art-deep: color-mix(in srgb, var(--accent-alt) 16%, #06070c);
+  --art-body: color-mix(in srgb, var(--accent-alt) 34%, #0a0b11);
+  --art-body-2: color-mix(in srgb, var(--accent) 26%, #0e1017);
+  --art-steel: color-mix(in srgb, var(--accent) 10%, #3f4450);
+  --art-core-1: color-mix(in oklch, var(--accent) 45%, #59606e);
+  --art-core-2: color-mix(in oklch, var(--accent) 65%, #7d8492);
+  --art-core-3: color-mix(in oklch, var(--accent) 80%, white 12%);
+  --art-core-4: color-mix(in oklch, var(--accent) 62%, white);
+  --art-hi: color-mix(in oklch, var(--accent) 32%, white);
+  --art-edge: color-mix(in srgb, var(--accent-alt) 70%, #1a1d2a);
+  --art-line: color-mix(in srgb, var(--accent-alt) 38%, transparent);
+  --art-line-2: color-mix(in srgb, var(--accent) 30%, transparent);
+  --art-outline: rgba(255, 255, 255, 0.55);
+}
+
+#svg-global {
+  zoom: 1.2;
+  overflow: visible;
+  filter: drop-shadow(0 0 calc(9px * var(--glow)) color-mix(in srgb, var(--accent) calc(30% * var(--glow)), transparent));
+}
+
+@keyframes fade-particles {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-40px);
+    opacity: 0;
+  }
+}
+
+#particles {
+  animation: fade-particles 5s infinite alternate;
+}
+.particle {
+  animation: floatUp linear infinite;
+}
+
+.p1 {
+  animation-duration: 2.2s;
+  animation-delay: 0s;
+}
+.p2 {
+  animation-duration: 2.5s;
+  animation-delay: 0.3s;
+}
+.p3 {
+  animation-duration: 2s;
+  animation-delay: 0.6s;
+}
+.p4 {
+  animation-duration: 2.8s;
+  animation-delay: 0.2s;
+}
+.p5 {
+  animation-duration: 2.3s;
+  animation-delay: 0.4s;
+}
+.p6 {
+  animation-duration: 3s;
+  animation-delay: 0.1s;
+}
+.p7 {
+  animation-duration: 2.1s;
+  animation-delay: 0.5s;
+}
+.p8 {
+  animation-duration: 2.6s;
+  animation-delay: 0.2s;
+}
+.p9 {
+  animation-duration: 2.4s;
+  animation-delay: 0.3s;
+}
+
+@keyframes bounce-lines {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+#line-v1,
+#line-v2,
+#node-server,
+#panel-rigth,
+#reflectores,
+#particles {
+  animation: bounce-lines 3s ease-in-out infinite alternate;
+}
+#line-v2 {
+  animation-delay: 0.2s;
+}
+
+#node-server,
+#panel-rigth,
+#reflectores,
+#particles {
+  animation-delay: 0.4s;
+}

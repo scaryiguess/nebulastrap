@@ -1,0 +1,83 @@
+:root {
+  --accent: #00d4ff;
+  --accent-alt: #7c5cff;
+  --glow: 0.6;
+  --radius: 14px;
+  --gap: 18px;
+
+  --bg-0: #050506;
+  --bg-1: #0a0a0c;
+  --bg-2: #070708;
+  --panel: #0e0f11;
+  --panel-hi: #15161a;
+  --sunken: #08080a;
+
+  --ink: #f2f4f7;
+  --ink-soft: #9aa2b1;
+  --ink-mute: #6a7180;
+  --ink-faint: #464c58;
+
+  --ok: #3ddc84;
+  --warn: #ffc043;
+  --bad: #ff5c5c;
+
+  --line: rgba(255, 255, 255, 0.075);
+  --line-soft: rgba(255, 255, 255, 0.045);
+
+  --lift-1: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --lift-2: 0 10px 30px -16px rgba(0, 0, 0, 0.95);
+  --press: inset 0 1px 3px rgba(0, 0, 0, 0.65);
+
+  --accent-ghost: color-mix(in srgb, var(--accent) 12%, transparent);
+  --accent-line: color-mix(in srgb, var(--accent) 42%, transparent);
+  --accent-ink: var(--accent);
+  --on-accent: #041016;
+  --glow-accent: 0 0 calc(30px * var(--glow)) color-mix(in srgb, var(--accent) calc(38% * var(--glow)), transparent);
+  --glow-tight: 0 0 calc(14px * var(--glow)) color-mix(in srgb, var(--accent) calc(48% * var(--glow)), transparent);
+
+  --font: "Segoe UI Variable Display", "Segoe UI", Inter, system-ui, sans-serif;
+  --font-mono: "Cascadia Mono", "JetBrains Mono", Consolas, ui-monospace, monospace;
+
+  --sidebar-w: 236px;
+  --topbar-h: 58px;
+  --speed: 160ms;
+}
+
+:root[data-base="graphite"] {
+  --bg-0: #0b0b0d;
+  --bg-1: #101012;
+  --bg-2: #0d0d0f;
+  --panel: #151619;
+  --panel-hi: #1c1e22;
+  --sunken: #101113;
+}
+
+:root[data-base="midnight"] {
+  --bg-0: #04060c;
+  --bg-1: #070b14;
+  --bg-2: #05080f;
+  --panel: #0b1120;
+  --panel-hi: #111a2c;
+  --sunken: #070c16;
+}
+
+:root[data-base="plum"] {
+  --bg-0: #07050b;
+  --bg-1: #0c0812;
+  --bg-2: #09060e;
+  --panel: #120c1c;
+  --panel-hi: #191026;
+  --sunken: #0d0814;
+}
+
+:root[data-density="compact"] {
+  --gap: 12px;
+  --topbar-h: 50px;
+}
+
+:root[data-motion="off"] *,
+:root[data-motion="off"] *::before,
+:root[data-motion="off"] *::after {
+  animation: none !important;
+  transition: none !important;
+}

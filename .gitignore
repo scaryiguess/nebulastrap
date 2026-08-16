@@ -1,0 +1,6 @@
+node_modules/
+dist/
+build/pyinstaller/
+__pycache__/
+*.pyc
+*.log

@@ -1,0 +1,22 @@
+NebulaStrap 3.1.0 - first public release
+
+What is new in this build
+- Auto update. NebulaStrap now checks for a new version 8 seconds after launch and
+  every 6 hours after that. The app installs itself when you close it; the engine
+  swaps live. Turn it off in Utilities if you would rather update by hand.
+- Build guard. Injection is blocked whenever the client build cannot be read, not
+  only when it is known to differ. The Main tile now names YOUR client build first,
+  then the build the offsets were dumped for, so a mismatch reads correctly.
+- Macro page. Record and replay keyboard and mouse, an auto clicker builder, app
+  hotkeys, right click a step to clone / copy / paste / retime, and an ACTIVE switch
+  per macro.
+- Auto Attach waits until the client has been up for 30 seconds before taking hold.
+- Uncap FPS, plus a lock that puts the cap back every time Roblox rewrites it.
+- Live Monitor stays armed while you are detached, so you arm it once and attach later.
+
+Reminders
+- Windows will show a UAC prompt. Writing another process' memory needs it.
+- SmartScreen will warn about an unsigned exe. More info, then Run anyway.
+- The first Attach needs internet - the offset table is downloaded per Roblox build.
+- If the app says the build does not match, do not turn Safe writes off to push past
+  it. Pin your Roblox version with a strap, or wait for offsets for your build.
