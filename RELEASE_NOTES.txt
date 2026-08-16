@@ -1,18 +1,25 @@
-NebulaStrap 3.1.0 - first public release
+Download NebulaStrap.exe - that is the whole program. The other two files
+(engine.exe, latest.json) are for the updater; ignore them.
 
-What is new in this build
-- Auto update. NebulaStrap now checks for a new version 8 seconds after launch and
-  every 6 hours after that. The app installs itself when you close it; the engine
-  swaps live. Turn it off in Utilities if you would rather update by hand.
-- Build guard. Injection is blocked whenever the client build cannot be read, not
-  only when it is known to differ. The Main tile now names YOUR client build first,
-  then the build the offsets were dumped for, so a mismatch reads correctly.
-- Macro page. Record and replay keyboard and mouse, an auto clicker builder, app
-  hotkeys, right click a step to clone / copy / paste / retime, and an ACTIVE switch
-  per macro.
-- Auto Attach waits until the client has been up for 30 seconds before taking hold.
-- Uncap FPS, plus a lock that puts the cap back every time Roblox rewrites it.
-- Live Monitor stays armed while you are detached, so you arm it once and attach later.
+NebulaStrap 3.1.1
+
+Fixes the auto updater, which never actually applied anything in 3.1.0. It
+downloaded the new build, checked it, put it aside - and then quietly did
+nothing on quit. Three things were wrong, and each one hid the next:
+
+- The helper script lived inside the folder the portable exe unpacks itself
+  into, and that folder is deleted the moment the app closes. Its whole job is
+  to wait for the app to close first. It is copied somewhere stable now.
+- Handing it to PowerShell with a detached flag gave that process no console,
+  and PowerShell cannot start without one. It died before running a line.
+- Without the detached flag the helper is killed along with the app instead.
+  The swap now goes through wscript, which needs no console and survives.
+
+Every step writes to updates\swap.log now, so a swap that fails says why
+instead of failing silently.
+
+IF YOU ARE ON 3.1.0 you have to download this one by hand - 3.1.0 cannot
+install it for you, that is the bug. From 3.1.1 on, updates apply themselves.
 
 Reminders
 - Windows will show a UAC prompt. Writing another process' memory needs it.

@@ -1,6 +1,6 @@
 {
   "name": "fflag-injector-v3",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "NebulaStrap - Roblox FFlag injector with a flat dark soft-glow dashboard",
   "main": "src/main/index.js",
   "author": "Roulette",
@@ -25,13 +25,32 @@
       "!build/icon.html"
     ],
     "extraResources": [
-      { "from": "dist/engine.exe", "to": "engine.exe" },
-      { "from": "scripts/memory-worker.ps1", "to": "memory-worker.ps1" },
-      { "from": "scripts/multi-instance.ps1", "to": "multi-instance.ps1" },
-      { "from": "scripts/apply-update.ps1", "to": "apply-update.ps1" }
+      {
+        "from": "dist/engine.exe",
+        "to": "engine.exe"
+      },
+      {
+        "from": "scripts/memory-worker.ps1",
+        "to": "memory-worker.ps1"
+      },
+      {
+        "from": "scripts/multi-instance.ps1",
+        "to": "multi-instance.ps1"
+      },
+      {
+        "from": "scripts/apply-update.ps1",
+        "to": "apply-update.ps1"
+      }
     ],
     "win": {
-      "target": [{ "target": "portable", "arch": ["x64"] }],
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
       "icon": "build/icon.ico",
       "requestedExecutionLevel": "asInvoker"
     },

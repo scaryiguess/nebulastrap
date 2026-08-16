@@ -196,6 +196,7 @@ class Updater extends EventEmitter {
   start () {
     clearTimeout(this._first)
     clearInterval(this._timer)
+    this._note(`app ${this.appVersion} started, packaged=${app.isPackaged}`)
     if (!app.isPackaged) return
     this._first = setTimeout(() => this.check({ auto: true }), FIRST_CHECK_DELAY)
     this._timer = setInterval(() => this.check({ auto: true }), RECHECK_EVERY)
@@ -267,6 +268,7 @@ class Updater extends EventEmitter {
       if (wantApp) {
         this._log(`[*] Update ${appEntry.version} found - downloading in the background`, 'info')
         this.pendingApp = await this._fetchAsset(appEntry, 'app', paths.updateDir, `NebulaStrap-${appEntry.version}.exe`)
+        this._note(`staged ${appEntry.version} at ${this.pendingApp.file}`)
         this.phase = 'ready'
         this._log(`[+] Update ${appEntry.version} is ready - it installs when you close the app`, 'success')
       } else {
@@ -332,7 +334,7 @@ class Updater extends EventEmitter {
   _sweep (directory, keep) {
     try {
       for (const name of fs.readdirSync(directory)) {
-        if (name === keep || name === 'engine.json') continue
+        if (name === keep || name === 'engine.json' || name === 'swap.log' || name === 'apply-update.ps1') continue
         try {
           fs.rmSync(path.join(directory, name), { force: true })
         } catch {}
@@ -364,27 +366,89 @@ class Updater extends EventEmitter {
     return { ok: true, version }
   }
 
+  _note (line) {
+    try {
+      fs.mkdirSync(paths.updateDir, { recursive: true })
+      fs.appendFileSync(
+        path.join(paths.updateDir, 'swap.log'),
+        `${new Date().toISOString()} pid ${process.pid}  ${line}\n`,
+        'utf8'
+      )
+    } catch {}
+  }
+
   applyAppOnQuit () {
-    if (!this.pendingApp) return false
     const target = paths.selfExe
     const helper = paths.updateHelper
-    if (!app.isPackaged || !fs.existsSync(helper) || !fs.existsSync(this.pendingApp.file)) return false
-    if (!/\.exe$/i.test(target)) return false
+    const staged = this.pendingApp ? this.pendingApp.file : ''
+
+    this._note(`quit reached applyAppOnQuit  packaged=${app.isPackaged} pending=${this.pendingApp ? this.pendingApp.version : 'none'}`)
+    this._note(`  target = ${target}`)
+    this._note(`  helper = ${helper}  exists=${fs.existsSync(helper)}`)
+    this._note(`  staged = ${staged}  exists=${staged ? fs.existsSync(staged) : false}`)
+    this._note(`  PORTABLE_EXECUTABLE_FILE = ${process.env.PORTABLE_EXECUTABLE_FILE || '(unset)'}`)
+    this._note(`  execPath = ${process.execPath}`)
+
+    if (!this.pendingApp) {
+      this._note('  -> nothing staged in this process, no swap')
+      return false
+    }
+    if (!app.isPackaged) {
+      this._note('  -> running from source, no swap')
+      return false
+    }
+    if (!fs.existsSync(helper)) {
+      this._note('  -> the helper script is missing, no swap')
+      return false
+    }
+    if (!fs.existsSync(staged)) {
+      this._note('  -> the staged file is gone, no swap')
+      return false
+    }
+    if (!/\.exe$/i.test(target)) {
+      this._note('  -> target is not an exe, no swap')
+      return false
+    }
+
+    let runner = helper
+    try {
+      fs.mkdirSync(paths.updateDir, { recursive: true })
+      runner = path.join(paths.updateDir, 'apply-update.ps1')
+      fs.copyFileSync(helper, runner)
+      this._note(`  copied the helper out to ${runner}`)
+    } catch (error) {
+      this._note(`  could not copy the helper out (${error.message}), running it in place`)
+      runner = helper
+    }
+
+    const logFile = path.join(paths.updateDir, 'swap.log')
+    const command = [
+      'powershell.exe',
+      '-NoProfile',
+      '-NonInteractive',
+      '-WindowStyle Hidden',
+      '-ExecutionPolicy Bypass',
+      `-File ""${runner}""`,
+      `-ProcessId ${process.pid}`,
+      `-Target ""${target}""`,
+      `-Source ""${staged}""`,
+      `-LogFile ""${logFile}""`
+    ].join(' ')
 
     try {
-      const child = spawn('powershell.exe', [
-        '-NoProfile',
-        '-NonInteractive',
-        '-WindowStyle', 'Hidden',
-        '-ExecutionPolicy', 'Bypass',
-        '-File', helper,
-        '-ProcessId', String(process.pid),
-        '-Target', target,
-        '-Source', this.pendingApp.file
-      ], { detached: true, stdio: 'ignore', windowsHide: true })
+      const vbs = path.join(paths.updateDir, 'apply-update.vbs')
+      fs.writeFileSync(vbs, [
+        'Set shell = CreateObject("WScript.Shell")',
+        `shell.Run "${command}", 0, False`,
+        ''
+      ].join('\r\n'), 'ascii')
+
+      const child = spawn('wscript.exe', [vbs], { detached: true, stdio: 'ignore' })
       child.unref()
+      this._note(`  -> handed off through wscript pid ${child.pid}`)
       return true
     } catch (error) {
+      this._note(`  -> handoff failed: ${error.message}`)
       console.error('[updater] could not hand off the swap:', error.message)
       return false
     }
